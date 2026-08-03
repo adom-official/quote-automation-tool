@@ -44,7 +44,7 @@ export default function QuoteDetailPage() {
         @media print {
           @page {
             size: A4 portrait;
-            margin: 12mm 12mm 12mm 12mm;
+            margin: 0mm 12mm 12mm 12mm;
           }
           html, body {
             margin: 0 !important;
@@ -58,9 +58,9 @@ export default function QuoteDetailPage() {
             display: block !important;
             position: fixed !important;
             top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            width: 100% !important;
+            left: -12mm !important;
+            right: -12mm !important;
+            width: calc(100% + 24mm) !important;
             height: 6mm !important;
             background-color: #A6CE39 !important;
             -webkit-print-color-adjust: exact !important;
@@ -69,7 +69,7 @@ export default function QuoteDetailPage() {
           }
           .print-page-wrapper {
             padding: 0 !important;
-            padding-top: 8mm !important;
+            padding-top: 14mm !important;
             margin: 0 !important;
             width: 100% !important;
           }
@@ -176,12 +176,12 @@ export default function QuoteDetailPage() {
                     <AdomLogo className="w-full h-auto" align="right" />
                   </div>
                 </div>
-                <p className="font-bold text-slate-900 text-base">ADOM Design Studio</p>
+                <p className="font-bold text-slate-900 text-base">ADOM Creative</p>
               </div>
               <div className="space-y-0.5 text-xs text-slate-500 w-full text-right">
-                <p>88 Xã Đàn, Đống Đa, Hà Nội</p>
-                <p>Hotline: 0909 888 999</p>
-                <p>Email: hello@adomstudio.vn</p>
+                <p>Số 2 liền kề 6 KĐT Đại Thanh, xã Đại Thanh, Hà Nội</p>
+                <p>Hotline: 0985048267</p>
+                <p>Email: creative.adom@gmail.com</p>
               </div>
             </div>
           </div>
@@ -248,7 +248,7 @@ export default function QuoteDetailPage() {
               <p className="text-xs text-slate-500 mb-4" suppressHydrationWarning>
                 Hà Nội, ngày {new Date().getDate()} tháng {new Date().getMonth() + 1} năm {new Date().getFullYear()}
               </p>
-              <h4 className="font-bold text-[#0B1527] text-sm uppercase mb-1">CÔNG TY ADOM DESIGN STUDIO</h4>
+              <h4 className="font-bold text-[#0B1527] text-sm uppercase mb-1">CÔNG TY ADOM CREATIVE</h4>
               <p className="text-[10px] text-slate-400 italic">(Ký, ghi rõ họ tên)</p>
             </div>
           </div>
