@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useStore } from '@/lib/store';
-import { Plus, FileText, Trash2, ArrowRight } from 'lucide-react';
+import { Plus, FileText, Trash2, ArrowRight, Search, X } from 'lucide-react';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { ConfirmModal } from '@/components/ConfirmModal';
@@ -11,8 +11,7 @@ export default function QuotesPage() {
   const { quotes, deleteQuote } = useStore();
   const loading = false;
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
-
-  
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleDelete = async () => {
     if (!itemToDelete) return;
@@ -29,17 +28,42 @@ export default function QuotesPage() {
     }
   };
 
+  const filteredQuotes = quotes.filter(quote => {
+    if (!searchTerm.trim()) return true;
+    const term = searchTerm.trim().toLowerCase();
+    const idMatch = (quote.id || '').toLowerCase().includes(term);
+    const projectMatch = (quote.projectName || '').toLowerCase().includes(term);
+    const clientMatch = (quote.clientName || '').toLowerCase().includes(term);
+    const itemMatch = (quote.items || []).some((i: any) => (i.name || '').toLowerCase().includes(term));
+    return idMatch || projectMatch || clientMatch || itemMatch;
+  });
+
   return (
     <div className="h-full flex flex-col">
-      <div className="flex justify-between items-end mb-6 shrink-0">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 shrink-0">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 ">Quản lý Báo Giá</h2>
-          <p className="text-slate-900 text-sm mt-1">Tạo và quản lý các báo giá gửi cho khách hàng.</p>
+          <h2 className="text-2xl font-bold text-slate-900">Quản lý Báo Giá</h2>
+          <p className="text-slate-500 text-sm mt-1">Tạo và quản lý các báo giá gửi cho khách hàng.</p>
         </div>
-        <div>
+        <div className="flex items-center gap-3">
+          <div className="relative flex-1 sm:w-64">
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input 
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Lọc mã BG, dự án..."
+              className="w-full pl-9 pr-8 py-2 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all placeholder:text-slate-400"
+            />
+            {searchTerm && (
+              <button onClick={() => setSearchTerm('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
           <Link 
             href="/dashboard/quotes/new"
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-medium shadow-sm hover:bg-indigo-700 hover:shadow-sm transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-bold shadow-sm hover:bg-indigo-700 transition-colors shrink-0"
           >
             <Plus className="w-4 h-4" />
             Tạo báo giá mới
@@ -49,7 +73,7 @@ export default function QuotesPage() {
 
       <div className="flex-1 overflow-auto bg-white border border-slate-200 rounded-xl">
         <table className="w-full text-sm text-left">
-          <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-200 sticky top-0">
+          <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-200 sticky top-0 z-10">
             <tr>
               <th className="px-6 py-4 font-bold">Mã BG / Tên dự án</th>
               <th className="px-6 py-4 font-bold">Khách hàng</th>
@@ -60,24 +84,32 @@ export default function QuotesPage() {
           </thead>
           <tbody className="divide-y divide-slate-100">
             {loading ? (
-              <tr><td colSpan={5} className="px-6 py-8 text-center text-slate-900">Đang tải dữ liệu...</td></tr>
-            ) : quotes.length === 0 ? (
-              <tr><td colSpan={5} className="px-6 py-8 text-center text-slate-900">Chưa có báo giá nào.</td></tr>
+              <tr><td colSpan={5} className="px-6 py-8 text-center text-slate-500">Đang tải dữ liệu...</td></tr>
+            ) : filteredQuotes.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="px-6 py-12 text-center text-slate-500">
+                  {searchTerm ? `Không tìm thấy báo giá nào phù hợp với "${searchTerm}"` : 'Chưa có báo giá nào.'}
+                </td>
+              </tr>
             ) : (
-              quotes.map(quote => (
-                <tr key={quote.id} className="hover:bg-slate-50 transition-colors group">
+              filteredQuotes.map(quote => (
+                <tr key={quote.id} className="hover:bg-slate-50/80 transition-colors group">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100 shrink-0">
+                      <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100 shrink-0 font-bold">
                         <FileText className="w-5 h-5" />
                       </div>
                       <div>
-                        <span className="font-bold text-slate-900 block">{quote.projectName}</span>
-                        <span className="text-xs text-slate-900">{quote.id.substring(0, 8).toUpperCase()} - {quote.createdAt?.toDate ? format(quote.createdAt.toDate(), 'dd/MM/yyyy') : ''}</span>
+                        <Link href={`/quote/${quote.id}`} className="font-bold text-slate-900 hover:text-indigo-600 transition-colors block">
+                          {quote.projectName}
+                        </Link>
+                        <span className="text-xs font-mono text-slate-400">
+                          #{quote.id.substring(0, 8).toUpperCase()} {quote.createdAt ? `· ${format(new Date(quote.createdAt), 'dd/MM/yyyy')}` : ''}
+                        </span>
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-slate-900 font-medium">
+                  <td className="px-6 py-4 text-slate-800 font-semibold">
                     {quote.clientName}
                   </td>
                   <td className="px-6 py-4">
@@ -96,10 +128,10 @@ export default function QuotesPage() {
                         e.preventDefault();
                         e.stopPropagation();
                         setItemToDelete(quote.id);
-                      }} className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors">
+                      }} className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors">
                         <Trash2 className="w-4 h-4" />
                       </button>
-                      <Link href={`/quote/${quote.id}`} className="p-2 text-gray-500 hover:text-slate-900 hover:bg-indigo-50 rounded-xl transition-colors flex items-center gap-1">
+                      <Link href={`/quote/${quote.id}`} className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors flex items-center gap-1">
                         <ArrowRight className="w-4 h-4" />
                       </Link>
                     </div>

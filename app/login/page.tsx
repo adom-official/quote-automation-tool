@@ -26,7 +26,7 @@ function LoginForm() {
 
   useEffect(() => {
     if (urlError === 'AccessDenied') {
-      setError('Rất tiếc! Email Google này không nằm trong danh sách tài khoản được ủy quyền (haivminh@gmail.com, creative.adom@gmail.com).');
+      setError('Tài khoản Google của bạn chưa được cấp quyền truy cập vào hệ thống.');
     } else if (urlError) {
       setError('Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin hoặc thử lại.');
     }
@@ -173,12 +173,6 @@ function LoginForm() {
           )}
         </button>
       </form>
-      
-      <div className="mt-6 text-center text-xs text-slate-400 space-y-1 bg-slate-50 p-3 rounded-xl border border-slate-100">
-        <p className="font-semibold text-slate-600">Danh sách email Google được cấp quyền:</p>
-        <p className="text-indigo-600 font-mono">haivminh@gmail.com</p>
-        <p className="text-indigo-600 font-mono">creative.adom@gmail.com</p>
-      </div>
     </div>
   );
 }
