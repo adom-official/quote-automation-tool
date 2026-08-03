@@ -44,7 +44,7 @@ export default function QuoteDetailPage() {
         @media print {
           @page {
             size: A4 portrait;
-            margin: 0;
+            margin: 18mm 12mm 14mm 12mm;
           }
           html, body {
             margin: 0 !important;
@@ -57,10 +57,10 @@ export default function QuoteDetailPage() {
           .print-top-bar {
             display: block !important;
             position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            width: 100% !important;
+            top: -18mm !important;
+            left: -12mm !important;
+            right: -12mm !important;
+            width: calc(100% + 24mm) !important;
             height: 6mm !important;
             background-color: #A6CE39 !important;
             -webkit-print-color-adjust: exact !important;
@@ -68,8 +68,8 @@ export default function QuoteDetailPage() {
             z-index: 9999 !important;
           }
           .print-page-wrapper {
-            padding: 15mm 12mm 15mm 12mm !important;
-            box-sizing: border-box !important;
+            padding: 0 !important;
+            margin: 0 !important;
             width: 100% !important;
           }
           thead {
