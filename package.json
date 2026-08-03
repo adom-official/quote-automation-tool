@@ -1,0 +1,35 @@
+{
+  "name": "applet",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "NODE_ENV=production next build",
+    "start": "next start -p 3000",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "date-fns": "^4.4.0",
+    "firebase": "^12.15.0",
+    "lucide-react": "^1.23.0",
+    "next": "15.1.3",
+    "next-auth": "^4.24.14",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "recharts": "^3.9.2",
+    "tailwind-merge": "^3.6.0",
+    "uuid": "^14.0.1",
+    "zod": "^4.4.3",
+    "zustand": "^5.0.14"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.2",
+    "@types/node": "20.17.6",
+    "@types/react": "19.2.17",
+    "@types/uuid": "^10.0.0",
+    "postcss": "^8.5.16",
+    "tailwindcss": "^4.3.2",
+    "typescript": "5.8.2"
+  }
+}
