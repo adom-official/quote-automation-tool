@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #0f172a;
+}
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+@theme {
+  --color-indigo-50: #f4fae9;
+  --color-indigo-100: #e5f4cf;
+  --color-indigo-200: #cbe9a2;
+  --color-indigo-300: #aadd6d;
+  --color-indigo-400: #8ecb41;
+  --color-indigo-500: #75b128;
+  --color-indigo-600: #8DC63F;
+  --color-indigo-700: #75b128;
+  --color-indigo-800: #5a8a1c;
+  --color-indigo-900: #456b19;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    margin: 0;
+  }
+}
