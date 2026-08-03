@@ -44,11 +44,12 @@ export default function QuoteDetailPage() {
         @media print {
           @page {
             size: A4 portrait;
-            margin: 0mm 12mm 12mm 12mm;
+            margin: 0 !important;
           }
           html, body {
             margin: 0 !important;
             padding: 0 !important;
+            width: 100% !important;
             background-color: white !important;
             color: black !important;
             -webkit-print-color-adjust: exact !important;
@@ -58,9 +59,9 @@ export default function QuoteDetailPage() {
             display: block !important;
             position: fixed !important;
             top: 0 !important;
-            left: -12mm !important;
-            right: -12mm !important;
-            width: calc(100% + 24mm) !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100vw !important;
             height: 6mm !important;
             background-color: #A6CE39 !important;
             -webkit-print-color-adjust: exact !important;
@@ -68,10 +69,10 @@ export default function QuoteDetailPage() {
             z-index: 99999 !important;
           }
           .print-page-wrapper {
-            padding: 0 !important;
-            padding-top: 14mm !important;
+            padding: 14mm 12mm 12mm 12mm !important;
             margin: 0 !important;
             width: 100% !important;
+            box-sizing: border-box !important;
           }
           thead {
             display: table-header-group !important;
@@ -88,9 +89,6 @@ export default function QuoteDetailPage() {
           }
           .print\\:shadow-none {
             box-shadow: none !important;
-          }
-          .print\\:p-0 {
-            padding: 0 !important;
           }
           .print\\:w-full {
             width: 100% !important;
