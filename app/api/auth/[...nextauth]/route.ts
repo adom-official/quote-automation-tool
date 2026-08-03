@@ -14,6 +14,11 @@ const handler = NextAuth({
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || "dummy_google_client_id",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "dummy_google_client_secret",
+      authorization: {
+        params: {
+          prompt: "select_account",
+        },
+      },
     }),
     CredentialsProvider({
       name: "Credentials",
