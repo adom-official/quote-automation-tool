@@ -1,40 +1,74 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useStore } from '@/lib/store';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, Trash2, ArrowLeft } from 'lucide-react';
+import { ConfirmModal } from '@/components/ConfirmModal';
 
-export default function NewPackagePage() {
-  const { addPackage, items } = useStore();
+export default function EditPackagePage() {
+  const params = useParams();
   const router = useRouter();
+  const { packages, updatePackage, deletePackage, items } = useStore();
   
-  const [loadingItems, setLoadingItems] = useState(true);
-  
-  useEffect(() => {
-    setLoadingItems(false);
-  }, []);
-  
+  const packageId = params?.id as string;
+  const pkg = packages.find(p => p.id === packageId);
+
   const [packageName, setPackageName] = useState('');
   const [budget, setBudget] = useState('');
   const [scale, setScale] = useState('');
-  
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  useEffect(() => {
+    if (pkg) {
+      setPackageName(pkg.name || '');
+      setBudget(pkg.budget || '');
+      setScale(pkg.scale || '');
+      if (pkg.items && Array.isArray(pkg.items)) {
+        setSelectedItems(pkg.items.map((item: any, index: number) => ({
+          ...item,
+          estimatedTime: item.estimatedTime ?? 5,
+          _id: item._id || (item.id || item.name) + '-' + Date.now() + '-' + index
+        })));
+      }
+    }
+  }, [pkg]);
+
+  if (!pkg) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full gap-4 py-12">
+        <p className="text-slate-500 font-medium">Gói báo giá không tồn tại hoặc đã bị xóa.</p>
+        <button onClick={() => router.push('/dashboard/packages')} className="text-indigo-600 font-bold hover:underline text-sm">
+          Quay lại danh sách gói
+        </button>
+      </div>
+    );
+  }
 
   const handleDragStart = (e: React.DragEvent, item: any) => {
     e.dataTransfer.setData('application/json', JSON.stringify(item));
+  };
+
+  const addItemToPackage = (item: any) => {
+    setSelectedItems(prev => [...prev, {
+      ...item,
+      estimatedTime: item.estimatedTime ?? 5,
+      _id: (item.id || item.name) + '-' + Date.now() + '-' + Math.random()
+    }]);
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const itemData = e.dataTransfer.getData('application/json');
     if (itemData) {
-      const item = JSON.parse(itemData);
-      setSelectedItems(prev => [...prev, { 
-        ...item, 
-        estimatedTime: item.estimatedTime ?? 5,
-        _id: (item.id || item.name) + '-' + Date.now() + Math.random() 
-      }]);
+      try {
+        const item = JSON.parse(itemData);
+        addItemToPackage(item);
+      } catch (err) {
+        console.error("Invalid dropped item", err);
+      }
     }
   };
 
@@ -62,8 +96,6 @@ export default function NewPackagePage() {
   const totalPrice = selectedItems.reduce((sum, item) => sum + (Number(item.price) || 0), 0);
   const totalDays = selectedItems.reduce((sum, item) => sum + (Number(item.estimatedTime) || 5), 0);
 
-  const [isSaving, setIsSaving] = useState(false);
-
   const handleSave = () => {
     if (!packageName.trim()) {
       alert("Vui lòng nhập tên gói");
@@ -72,16 +104,20 @@ export default function NewPackagePage() {
     
     setIsSaving(true);
     
-    addPackage({
+    updatePackage(packageId, {
       name: packageName,
       budget,
       scale,
       items: selectedItems,
       totalPrice,
-      totalTime: totalDays + ' Ngày làm việc',
-      createdAt: Date.now()
+      totalTime: totalDays + ' Ngày làm việc'
     });
 
+    router.push('/dashboard/packages');
+  };
+
+  const handleDelete = () => {
+    deletePackage(packageId);
     router.push('/dashboard/packages');
   };
 
@@ -89,17 +125,29 @@ export default function NewPackagePage() {
     <div className="h-full flex flex-col">
       <div className="flex justify-between items-end mb-6 shrink-0">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">Xây dựng Gói Báo Giá Mới</h2>
-          <p className="text-slate-500 text-sm mt-1">Kéo thả hạng mục từ thư viện vào gói của bạn để tự động tính toán ngân sách và thời gian.</p>
+          <div className="flex items-center gap-2 mb-1">
+            <button onClick={() => router.push('/dashboard/packages')} className="text-slate-400 hover:text-slate-600 transition-colors">
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <h2 className="text-2xl font-bold text-slate-900">Chỉnh sửa Gói Báo Giá</h2>
+          </div>
+          <p className="text-slate-500 text-sm pl-7">Kéo thả hoặc nhấp chọn hạng mục từ thư viện để thêm/sửa gói báo giá.</p>
         </div>
-        <div className="flex gap-2">
-          <button onClick={() => router.back()} className="px-4 py-2 border border-slate-200 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors">Hủy</button>
+        <div className="flex gap-2 items-center">
+          <button 
+            onClick={() => setShowDeleteModal(true)}
+            className="px-4 py-2 border border-red-200 text-red-600 rounded-xl text-sm font-medium hover:bg-red-50 transition-colors flex items-center gap-1.5 mr-2"
+          >
+            <Trash2 className="w-4 h-4" />
+            Xóa gói
+          </button>
+          <button onClick={() => router.push('/dashboard/packages')} className="px-4 py-2 border border-slate-200 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors">Hủy</button>
           <button 
             onClick={handleSave} 
             disabled={isSaving}
-            className="px-5 py-2 bg-indigo-600 text-white rounded-xl text-sm font-bold shadow-sm hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+            className="px-5 py-2 bg-[#A6CE39] hover:bg-[#95ba33] text-slate-900 rounded-xl text-sm font-bold shadow-sm disabled:opacity-50 transition-colors"
           >
-            {isSaving ? 'Đang lưu...' : 'Lưu Gói & Tiếp tục'}
+            {isSaving ? 'Đang lưu...' : 'Lưu Thay Đổi'}
           </button>
         </div>
       </div>
@@ -136,9 +184,7 @@ export default function NewPackagePage() {
             <span className="text-[11px] text-slate-400">Kéo hoặc nhấp + để thêm</span>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            {loadingItems ? (
-              <p className="text-sm text-slate-500 text-center py-4">Đang tải dữ liệu...</p>
-            ) : items.length === 0 ? (
+            {items.length === 0 ? (
               <p className="text-sm text-slate-500 text-center py-4">Chưa có hạng mục nào trong thư viện.</p>
             ) : (
               items.map(item => (
@@ -146,13 +192,7 @@ export default function NewPackagePage() {
                   key={item.id || item.name}
                   draggable
                   onDragStart={(e) => handleDragStart(e, item)}
-                  onClick={() => {
-                    setSelectedItems(prev => [...prev, { 
-                      ...item, 
-                      estimatedTime: item.estimatedTime ?? 5,
-                      _id: (item.id || item.name) + '-' + Date.now() + Math.random() 
-                    }]);
-                  }}
+                  onClick={() => addItemToPackage(item)}
                   className="p-3 border border-slate-200 rounded-xl hover:border-indigo-400 bg-white cursor-pointer transition-all group hover:shadow-2xs relative"
                 >
                   <div className="flex justify-between items-start mb-1">
@@ -161,11 +201,7 @@ export default function NewPackagePage() {
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
-                        setSelectedItems(prev => [...prev, { 
-                          ...item, 
-                          estimatedTime: item.estimatedTime ?? 5,
-                          _id: (item.id || item.name) + '-' + Date.now() + Math.random() 
-                        }]);
+                        addItemToPackage(item);
                       }}
                       className="w-5 h-5 rounded-md bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white flex items-center justify-center transition-all absolute right-3 top-3"
                       title="Thêm vào gói"
@@ -236,8 +272,8 @@ export default function NewPackagePage() {
               </div>
             ))}
             
-            <div className="border-2 border-dashed border-indigo-200 rounded-xl h-24 flex items-center justify-center text-indigo-500 text-xs font-bold bg-white/50">
-              + Kéo thả hạng mục từ thư viện vào đây
+            <div className="border-2 border-dashed border-indigo-200 rounded-xl h-24 flex items-center justify-center text-indigo-500 text-xs font-bold bg-white/50 select-none">
+              + Kéo thả hoặc nhấp hạng mục từ thư viện bên trái để thêm vào gói này
             </div>
           </div>
           
@@ -255,6 +291,14 @@ export default function NewPackagePage() {
           </div>
         </div>
       </div>
+
+      <ConfirmModal
+        isOpen={showDeleteModal}
+        title="Xóa gói báo giá"
+        message="Bạn có chắc chắn muốn xóa gói báo giá này? Hành động này không thể hoàn tác."
+        onConfirm={handleDelete}
+        onCancel={() => setShowDeleteModal(false)}
+      />
     </div>
   );
 }

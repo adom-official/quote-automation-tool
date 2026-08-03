@@ -44,7 +44,7 @@ export default function QuoteDetailPage() {
         @media print {
           @page {
             size: A4 portrait;
-            margin: 18mm 12mm 14mm 12mm;
+            margin: 12mm 12mm 12mm 12mm;
           }
           html, body {
             margin: 0 !important;
@@ -54,21 +54,22 @@ export default function QuoteDetailPage() {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
           }
-          .print-top-bar {
+          .print-fixed-top-bar {
             display: block !important;
             position: fixed !important;
-            top: -18mm !important;
-            left: -12mm !important;
-            right: -12mm !important;
-            width: calc(100% + 24mm) !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
             height: 6mm !important;
             background-color: #A6CE39 !important;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
-            z-index: 9999 !important;
+            z-index: 99999 !important;
           }
           .print-page-wrapper {
             padding: 0 !important;
+            padding-top: 8mm !important;
             margin: 0 !important;
             width: 100% !important;
           }
@@ -102,6 +103,9 @@ export default function QuoteDetailPage() {
         }
       `}</style>
 
+      {/* Repeating Green Header Bar on Top of EVERY Printed Page */}
+      <div className="print-fixed-top-bar hidden print:block" />
+
       {/* Action Bar (Hidden when printing) */}
       <div className="flex items-center justify-between mb-6 print:hidden">
         <button 
@@ -132,10 +136,10 @@ export default function QuoteDetailPage() {
       </div>
 
       {/* Main Quote Canvas (Designed specifically for A4 PDF layout) */}
-      <div className="bg-white shadow-sm border border-slate-200 mx-auto print:border-none print:shadow-none print:w-full rounded-2xl print:rounded-none relative" style={{ maxWidth: '210mm' }}>
+      <div className="bg-white shadow-sm border border-slate-200 mx-auto print:border-none print:shadow-none print:w-full rounded-2xl print:rounded-none" style={{ maxWidth: '210mm' }}>
         
-        {/* 6mm Brand Color Fill Rectangle Bar (Screen preview & Print fixed header) */}
-        <div className="print-top-bar h-[6mm] w-full bg-[#A6CE39] shrink-0 rounded-t-2xl print:rounded-none" />
+        {/* Screen-only 6mm Brand Bar at top of card preview */}
+        <div className="h-[6mm] w-full bg-[#A6CE39] shrink-0 rounded-t-2xl print:hidden" />
 
         <div className="bg-white p-8 sm:p-12 print-page-wrapper print:p-0 print:w-full">
           
