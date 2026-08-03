@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # Define files
