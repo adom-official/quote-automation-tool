@@ -40,13 +40,15 @@ export default function QuoteDetailPage() {
 
   return (
     <div className="max-w-4xl mx-auto py-8 print:py-0 print:max-w-none print:w-full print:mx-0">
-      <style jsx global>{`
+      <style>{`
         @media print {
           @page {
             size: A4 portrait;
-            margin: 15mm 12mm 15mm 12mm;
+            margin: 0;
           }
-          body {
+          html, body {
+            margin: 0 !important;
+            padding: 0 !important;
             background-color: white !important;
             color: black !important;
             -webkit-print-color-adjust: exact !important;
@@ -55,14 +57,27 @@ export default function QuoteDetailPage() {
           .print-top-bar {
             display: block !important;
             position: fixed !important;
-            top: -15mm !important;
-            left: -12mm !important;
-            right: -12mm !important;
-            height: 5mm !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            height: 6mm !important;
             background-color: #A6CE39 !important;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
-            z-index: 9999;
+            z-index: 9999 !important;
+          }
+          .print-page-wrapper {
+            padding: 15mm 12mm 15mm 12mm !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+          }
+          thead {
+            display: table-header-group !important;
+          }
+          tr {
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
           }
           .print\\:hidden {
             display: none !important;
@@ -119,10 +134,10 @@ export default function QuoteDetailPage() {
       {/* Main Quote Canvas (Designed specifically for A4 PDF layout) */}
       <div className="bg-white shadow-sm border border-slate-200 mx-auto print:border-none print:shadow-none print:w-full rounded-2xl print:rounded-none relative" style={{ maxWidth: '210mm' }}>
         
-        {/* 5mm Brand Color Fill Rectangle Bar (Screen preview & Print fixed header) */}
-        <div className="print-top-bar h-[5mm] w-full bg-[#A6CE39] shrink-0 rounded-t-2xl print:rounded-none" />
+        {/* 6mm Brand Color Fill Rectangle Bar (Screen preview & Print fixed header) */}
+        <div className="print-top-bar h-[6mm] w-full bg-[#A6CE39] shrink-0 rounded-t-2xl print:rounded-none" />
 
-        <div className="bg-white p-8 sm:p-12 print:p-0 print:pt-2 print:w-full">
+        <div className="bg-white p-8 sm:p-12 print-page-wrapper print:p-0 print:w-full">
           
           {/* Header Columns */}
           <div className="grid grid-cols-2 gap-8 mb-6 border-b border-slate-100 pb-6 break-inside-avoid">
@@ -176,7 +191,7 @@ export default function QuoteDetailPage() {
           </div>
 
           {/* Table */}
-          <div className="mb-6 break-inside-avoid">
+          <div className="mb-6">
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b-2 border-slate-900">
@@ -199,7 +214,7 @@ export default function QuoteDetailPage() {
                 ))}
               </tbody>
             </table>
-            <div className="text-[11px] italic text-slate-400 mt-3">
+            <div className="text-[11px] italic text-slate-400 mt-3 break-inside-avoid">
               * Đơn giá nêu trên chưa bao gồm 8% thuế VAT.
             </div>
           </div>
