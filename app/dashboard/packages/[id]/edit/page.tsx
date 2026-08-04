@@ -47,6 +47,20 @@ export default function EditPackagePage() {
     );
   }
 
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+  };
+
+  useEffect(() => {
+    if (!toastMessage) return;
+    const timer = setTimeout(() => {
+      setToastMessage(null);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [toastMessage]);
+
   const handleDragStart = (e: React.DragEvent, item: any) => {
     e.dataTransfer.setData('application/json', JSON.stringify(item));
   };
@@ -57,6 +71,7 @@ export default function EditPackagePage() {
       estimatedTime: item.estimatedTime ?? 5,
       _id: (item.id || item.name) + '-' + Date.now() + '-' + Math.random()
     }]);
+    showToast(`Item "${item.name}" đã được thêm thành công`);
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -76,8 +91,13 @@ export default function EditPackagePage() {
     e.preventDefault();
   };
 
-  const removeItem = (id: string) => {
+  const removeItem = (id: string, name?: string) => {
     setSelectedItems(prev => prev.filter(item => item._id !== id));
+    if (name) {
+      showToast(`Item "${name}" đã được xóa thành công`);
+    } else {
+      showToast(`Item đã được xóa thành công`);
+    }
   };
 
   const handlePriceChange = (id: string, newPriceStr: string) => {
@@ -242,7 +262,7 @@ export default function EditPackagePage() {
             {selectedItems.map((item) => (
               <div key={item._id} className="bg-white p-3 sm:p-4 rounded-xl shadow-2xs border border-indigo-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative group hover:border-indigo-300 transition-all">
                 <button 
-                  onClick={() => removeItem(item._id)}
+                  onClick={() => removeItem(item._id, item.name)}
                   className="absolute -top-2 -right-2 w-6 h-6 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-bold text-xs opacity-80 hover:opacity-100 hover:scale-110 transition-all z-10"
                   title="Xóa hạng mục"
                 >
@@ -302,6 +322,14 @@ export default function EditPackagePage() {
         onConfirm={handleDelete}
         onCancel={() => setShowDeleteModal(false)}
       />
+
+      {/* Toast Notification (1s duration on mobile & desktop) */}
+      {toastMessage && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-full shadow-lg backdrop-blur-md transition-all flex items-center gap-2 border border-slate-700/50 animate-in fade-in slide-in-from-bottom-2 duration-200 pointer-events-none max-w-[90vw] text-center">
+          <span className="w-2 h-2 rounded-full bg-[#A6CE39] shrink-0" />
+          <span className="truncate">{toastMessage}</span>
+        </div>
+      )}
     </div>
   );
 }

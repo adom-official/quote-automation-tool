@@ -20,6 +20,28 @@ export default function NewPackagePage() {
   const [scale, setScale] = useState('');
   
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+  };
+
+  useEffect(() => {
+    if (!toastMessage) return;
+    const timer = setTimeout(() => {
+      setToastMessage(null);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [toastMessage]);
+
+  const addItemToPackage = (item: any) => {
+    setSelectedItems(prev => [...prev, { 
+      ...item, 
+      estimatedTime: item.estimatedTime ?? 5,
+      _id: (item.id || item.name) + '-' + Date.now() + '-' + Math.random() 
+    }]);
+    showToast(`Item "${item.name}" đã được thêm thành công`);
+  };
 
   const handleDragStart = (e: React.DragEvent, item: any) => {
     e.dataTransfer.setData('application/json', JSON.stringify(item));
@@ -29,12 +51,12 @@ export default function NewPackagePage() {
     e.preventDefault();
     const itemData = e.dataTransfer.getData('application/json');
     if (itemData) {
-      const item = JSON.parse(itemData);
-      setSelectedItems(prev => [...prev, { 
-        ...item, 
-        estimatedTime: item.estimatedTime ?? 5,
-        _id: (item.id || item.name) + '-' + Date.now() + Math.random() 
-      }]);
+      try {
+        const item = JSON.parse(itemData);
+        addItemToPackage(item);
+      } catch (err) {
+        console.error("Invalid dropped item", err);
+      }
     }
   };
 
@@ -42,8 +64,13 @@ export default function NewPackagePage() {
     e.preventDefault();
   };
 
-  const removeItem = (id: string) => {
+  const removeItem = (id: string, name?: string) => {
     setSelectedItems(prev => prev.filter(item => item._id !== id));
+    if (name) {
+      showToast(`Item "${name}" đã được xóa thành công`);
+    } else {
+      showToast(`Item đã được xóa thành công`);
+    }
   };
 
   const handlePriceChange = (id: string, newPriceStr: string) => {
@@ -149,13 +176,7 @@ export default function NewPackagePage() {
                   key={item.id || item.name}
                   draggable
                   onDragStart={(e) => handleDragStart(e, item)}
-                  onClick={() => {
-                    setSelectedItems(prev => [...prev, { 
-                      ...item, 
-                      estimatedTime: item.estimatedTime ?? 5,
-                      _id: (item.id || item.name) + '-' + Date.now() + Math.random() 
-                    }]);
-                  }}
+                  onClick={() => addItemToPackage(item)}
                   className="p-3 border border-slate-200 rounded-xl hover:border-indigo-400 bg-white cursor-pointer transition-all group hover:shadow-2xs relative"
                 >
                   <div className="flex justify-between items-start mb-1">
@@ -164,11 +185,7 @@ export default function NewPackagePage() {
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
-                        setSelectedItems(prev => [...prev, { 
-                          ...item, 
-                          estimatedTime: item.estimatedTime ?? 5,
-                          _id: (item.id || item.name) + '-' + Date.now() + Math.random() 
-                        }]);
+                        addItemToPackage(item);
                       }}
                       className="w-5 h-5 rounded-md bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white flex items-center justify-center transition-all absolute right-3 top-3"
                       title="Thêm vào gói"
@@ -206,7 +223,7 @@ export default function NewPackagePage() {
             {selectedItems.map((item) => (
               <div key={item._id} className="bg-white p-3 sm:p-4 rounded-xl shadow-2xs border border-indigo-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative group hover:border-indigo-300 transition-all">
                 <button 
-                  onClick={() => removeItem(item._id)}
+                  onClick={() => removeItem(item._id, item.name)}
                   className="absolute -top-2 -right-2 w-6 h-6 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-bold text-xs opacity-80 hover:opacity-100 hover:scale-110 transition-all z-10"
                   title="Xóa hạng mục"
                 >
@@ -258,6 +275,14 @@ export default function NewPackagePage() {
           </div>
         </div>
       </div>
+
+      {/* Toast Notification (1s duration on mobile & desktop) */}
+      {toastMessage && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-full shadow-lg backdrop-blur-md transition-all flex items-center gap-2 border border-slate-700/50 animate-in fade-in slide-in-from-bottom-2 duration-200 pointer-events-none max-w-[90vw] text-center">
+          <span className="w-2 h-2 rounded-full bg-[#A6CE39] shrink-0" />
+          <span className="truncate">{toastMessage}</span>
+        </div>
+      )}
     </div>
   );
 }

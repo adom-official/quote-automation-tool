@@ -40,6 +40,23 @@ export default function QuoteDetailPage() {
 
   return (
     <div className="max-w-4xl mx-auto py-8 print:py-0 print:max-w-none print:w-full print:mx-0">
+      {/* Fixed 6mm Brand Fill Bar for Every Printed Page on Safari & Chrome */}
+      <div 
+        className="hidden print:block print-fixed-top-bar" 
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          width: '100%',
+          height: '6mm',
+          backgroundColor: '#A6CE39',
+          WebkitPrintColorAdjust: 'exact',
+          printColorAdjust: 'exact',
+          zIndex: 999999
+        }} 
+      />
+
       <style>{`
         @media print {
           @page {
@@ -57,6 +74,22 @@ export default function QuoteDetailPage() {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
           }
+          div, main {
+            overflow: visible !important;
+          }
+          .print-fixed-top-bar {
+            display: block !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            height: 6mm !important;
+            background-color: #A6CE39 !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            z-index: 999999 !important;
+          }
           .print-quote-table {
             width: 100% !important;
             border-collapse: collapse !important;
@@ -65,6 +98,9 @@ export default function QuoteDetailPage() {
           }
           thead {
             display: table-header-group !important;
+          }
+          thead tr {
+            height: 6mm !important;
           }
           tr, .break-inside-avoid {
             break-inside: avoid !important;
