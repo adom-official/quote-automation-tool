@@ -118,9 +118,21 @@ export default function QuotesPage() {
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="font-mono font-bold text-slate-900">
-                      {new Intl.NumberFormat('en-US').format(quote.totalPrice || 0)}đ
-                    </span>
+                    {(() => {
+                      const subTotal = quote.totalPrice || 0;
+                      const hasVat = quote.includeVat !== false;
+                      const finalTotal = hasVat ? subTotal * 1.08 : subTotal;
+                      return (
+                        <div className="flex flex-col">
+                          <span className="font-mono font-bold text-slate-900">
+                            {new Intl.NumberFormat('en-US').format(finalTotal)}đ
+                          </span>
+                          {!hasVat && (
+                            <span className="text-[10px] text-slate-400 font-medium">Không VAT</span>
+                          )}
+                        </div>
+                      );
+                    })()}
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex justify-end gap-2">

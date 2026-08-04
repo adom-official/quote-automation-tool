@@ -34,7 +34,8 @@ export default function QuoteDetailPage() {
   };
 
   const subTotal = quote.totalPrice || 0;
-  const vatRate = 0.08;
+  const includeVat = quote.includeVat !== false;
+  const vatRate = includeVat ? 0.08 : 0;
   const vatAmount = subTotal * vatRate;
   const grandTotal = subTotal + vatAmount;
 
@@ -238,7 +239,7 @@ export default function QuoteDetailPage() {
                       </tbody>
                     </table>
                     <div className="text-[11px] italic text-slate-400 mt-3 break-inside-avoid">
-                      * Đơn giá nêu trên chưa bao gồm 8% thuế VAT.
+                      {includeVat ? '* Đơn giá nêu trên chưa bao gồm 8% thuế VAT.' : '* Báo giá nêu trên không bao gồm thuế VAT.'}
                     </div>
                   </div>
 
@@ -251,9 +252,9 @@ export default function QuoteDetailPage() {
                           <span className="font-mono font-medium">{new Intl.NumberFormat('en-US').format(subTotal)}đ</span>
                         </div>
                         <div className="flex justify-between py-1.5 text-sm text-slate-600">
-                          <span>Thuế VAT (8%)</span>
+                          <span>Thuế VAT {includeVat ? '(8%)' : ''}</span>
                           <span className="font-mono font-medium">
-                            {new Intl.NumberFormat('en-US').format(vatAmount)}đ
+                            {includeVat ? `${new Intl.NumberFormat('en-US').format(vatAmount)}đ` : 'Không VAT'}
                           </span>
                         </div>
                         <div className="flex justify-between py-2.5 text-base font-black text-[#A6CE39] border-t-2 border-slate-900 mt-1">

@@ -13,6 +13,7 @@ export default function NewQuotePage() {
   const [projectName, setProjectName] = useState('');
   const [selectedPackage, setSelectedPackage] = useState('');
   const [customItems, setCustomItems] = useState<any[]>([]);
+  const [includeVat, setIncludeVat] = useState(true);
   const [isClientDetailsExpanded, setIsClientDetailsExpanded] = useState(false);
   
   const [isLoading, setIsLoading] = useState(false);
@@ -37,7 +38,7 @@ export default function NewQuotePage() {
     
     setIsLoading(true);
     const client = clients.find(c => c.id === selectedClient);
-    const totalPrice = customItems.reduce((sum, item) => sum + (Number(item.price) || 0), 0);
+    const subTotal = customItems.reduce((sum, item) => sum + (Number(item.price) || 0), 0);
     
     const id = addQuote({
       projectName,
@@ -48,7 +49,8 @@ export default function NewQuotePage() {
       clientAddress: client.address || '',
       packageId: selectedPackage,
       items: customItems,
-      totalPrice,
+      totalPrice: subTotal,
+      includeVat: includeVat,
       status: 'Bản nháp',
       createdAt: Date.now()
     });
@@ -183,15 +185,53 @@ export default function NewQuotePage() {
           </div>
         </div>
         
-        <div className="p-4 sm:p-6 bg-slate-50 border-t border-slate-200 shrink-0 flex flex-col sm:flex-row gap-2 justify-between items-start sm:items-center">
-          <div className="text-[11px] sm:text-xs text-slate-500">
-            • Đơn giá chưa bao gồm 8% thuế VAT
+        <div className="p-4 sm:p-6 bg-slate-50 border-t border-slate-200 shrink-0 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            <label className="flex items-center gap-2.5 cursor-pointer select-none group bg-white px-3.5 py-2 rounded-xl border border-slate-200 shadow-2xs hover:border-indigo-300 transition-all">
+              <input 
+                type="checkbox"
+                checked={includeVat}
+                onChange={(e) => setIncludeVat(e.target.checked)}
+                className="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer accent-indigo-600"
+              />
+              <span className="text-xs sm:text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">
+                Xuất VAT (8%)
+              </span>
+            </label>
+            <span className="text-[11px] sm:text-xs text-slate-500">
+              {includeVat ? '• Đã bao gồm 8% thuế VAT vào tổng giá trị' : '• Không cộng 8% VAT vào tổng giá trị'}
+            </span>
           </div>
+
           <div className="text-right w-full sm:w-auto">
-            <p className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider mb-0.5">Tổng cộng (Chưa VAT)</p>
-            <p className="text-xl sm:text-2xl font-bold font-mono text-[#A6CE39]">
-              {new Intl.NumberFormat('en-US').format(customItems.reduce((sum, item) => sum + (Number(item.price) || 0), 0))}đ
-            </p>
+            {(() => {
+              const subTotal = customItems.reduce((sum, item) => sum + (Number(item.price) || 0), 0);
+              const vatAmount = includeVat ? subTotal * 0.08 : 0;
+              const grandTotal = subTotal + vatAmount;
+
+              return (
+                <>
+                  {includeVat ? (
+                    <div>
+                      <p className="text-[10px] sm:text-xs text-slate-500 font-medium mb-0.5">
+                        Tạm tính: <span className="font-mono">{new Intl.NumberFormat('en-US').format(subTotal)}đ</span> | VAT (8%): <span className="font-mono">{new Intl.NumberFormat('en-US').format(vatAmount)}đ</span>
+                      </p>
+                      <p className="text-[10px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-0.5">Tổng cộng (Đã gồm VAT)</p>
+                      <p className="text-xl sm:text-2xl font-bold font-mono text-[#A6CE39]">
+                        {new Intl.NumberFormat('en-US').format(grandTotal)}đ
+                      </p>
+                    </div>
+                  ) : (
+                    <div>
+                      <p className="text-[10px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-0.5">Tổng cộng (Không VAT)</p>
+                      <p className="text-xl sm:text-2xl font-bold font-mono text-[#A6CE39]">
+                        {new Intl.NumberFormat('en-US').format(subTotal)}đ
+                      </p>
+                    </div>
+                  )}
+                </>
+              );
+            })()}
           </div>
         </div>
       </div>
