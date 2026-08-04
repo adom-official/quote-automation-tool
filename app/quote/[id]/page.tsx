@@ -40,24 +40,12 @@ export default function QuoteDetailPage() {
 
   return (
     <div className="max-w-4xl mx-auto py-8 print:py-0 print:max-w-none print:w-full print:mx-0">
-      {/* Fixed 6mm Brand Fill Bar for Every Printed Page on Safari & Chrome */}
-      <div 
-        className="hidden print:block print-fixed-top-bar" 
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          width: '100%',
-          height: '6mm',
-          backgroundColor: '#A6CE39',
-          WebkitPrintColorAdjust: 'exact',
-          printColorAdjust: 'exact',
-          zIndex: 999999
-        }} 
-      />
-
       <style>{`
+        @media screen {
+          thead.print-header-top {
+            display: none !important;
+          }
+        }
         @media print {
           @page {
             size: A4 portrait;
@@ -77,18 +65,18 @@ export default function QuoteDetailPage() {
           div, main {
             overflow: visible !important;
           }
-          .print-fixed-top-bar {
-            display: block !important;
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            width: 100% !important;
+          thead.print-header-top {
+            display: table-header-group !important;
+          }
+          thead.print-header-top tr,
+          thead.print-header-top th {
             height: 6mm !important;
             background-color: #A6CE39 !important;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
-            z-index: 999999 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            border: none !important;
           }
           .print-quote-table {
             width: 100% !important;
@@ -96,32 +84,22 @@ export default function QuoteDetailPage() {
             margin: 0 !important;
             padding: 0 !important;
           }
-          thead {
-            display: table-header-group !important;
-          }
-          thead tr {
-            height: 6mm !important;
-          }
           tr, .break-inside-avoid {
             break-inside: avoid !important;
             page-break-inside: avoid !important;
           }
-          .print\\:hidden {
+          .print\:hidden {
             display: none !important;
           }
-          .print\\:border-none {
+          .print\:border-none {
             border: none !important;
           }
-          .print\\:shadow-none {
+          .print\:shadow-none {
             box-shadow: none !important;
           }
-          .print\\:w-full {
+          .print\:w-full {
             width: 100% !important;
             max-width: none !important;
-          }
-          .break-inside-avoid {
-            break-inside: avoid !important;
-            page-break-inside: avoid !important;
           }
         }
       `}</style>
@@ -163,9 +141,9 @@ export default function QuoteDetailPage() {
 
         {/* Print-compatible Table Wrapper (repeats top green bar on top of EVERY printed page natively across Chrome & Mobile Safari) */}
         <table className="w-full border-collapse p-0 m-0 border-none print-quote-table">
-          <thead className="hidden print:table-header-group">
+          <thead className="print-header-top">
             <tr>
-              <th className="p-0 border-none m-0 font-normal">
+              <th className="p-0 border-none m-0 font-normal bg-[#A6CE39] h-[6mm]" style={{ backgroundColor: '#A6CE39', height: '6mm', WebkitPrintColorAdjust: 'exact', printColorAdjust: 'exact' }}>
                 <div 
                   className="w-full bg-[#A6CE39]" 
                   style={{ 
@@ -294,32 +272,67 @@ export default function QuoteDetailPage() {
                     </div>
                   </div>
 
-                  {/* ĐIỀU KHOẢN THƯƠNG MẠI */}
+                  {/* ĐIỀU KHOẢN THƯƠNG MẠI GÓI THIẾT KẾ LOGO STANDARD */}
                   <div className="border-t border-slate-100 pt-6 mt-4">
-                    <h2 className="text-sm font-bold text-[#0B1527] uppercase tracking-wider mb-4 break-inside-avoid">ĐIỀU KHOẢN THƯƠNG MẠI</h2>
+                    <h2 className="text-xs sm:text-sm font-bold text-[#0B1527] uppercase tracking-wider mb-4 break-inside-avoid">
+                      ĐIỀU KHOẢN THƯƠNG MẠI GÓI THIẾT KẾ LOGO STANDARD
+                    </h2>
 
-                    <div className="space-y-4 text-xs text-slate-600">
+                    <div className="space-y-3.5 text-xs text-slate-700 leading-relaxed">
                       <div className="break-inside-avoid">
-                        <h4 className="font-bold text-slate-700 mb-1 uppercase text-[11px]">1. THANH TOÁN</h4>
-                        <p>- Đặt cọc 50% giá trị báo giá ngay sau khi hai bên xác nhận.</p>
-                        <p>- Thanh toán 50% còn lại trong vòng 3 ngày kể từ khi bàn giao file thiết kế hoàn chỉnh.</p>
+                        <p>
+                          <span className="font-bold text-slate-900">Điều khoản 1.</span> Quý khách sau khi xác nhận sử dụng dịch vụ sẽ tạm ứng 50% chi phí, 50% còn lại Quý khách vui lòng thanh toán trước khi chúng tôi bàn giao file gốc.
+                        </p>
                       </div>
 
                       <div className="break-inside-avoid">
-                        <h4 className="font-bold text-slate-700 mb-1 uppercase text-[11px]">2. TIẾN ĐỘ THỰC HIỆN</h4>
-                        <p>- Thời gian hoàn thành được tính từ ngày nhận đủ tài liệu cần thiết và tiền cọc.</p>
-                        <p>- Miễn phí tối đa 2 lần chỉnh sửa cho mỗi hạng mục. Từ lần thứ 3 áp dụng phụ phí theo thoả thuận riêng.</p>
+                        <p>
+                          <span className="font-bold text-slate-900">Điều khoản 2.</span> Trước khi thực hiện công việc thiết kế, hai bên cần thống nhất định hướng thiết kế trong file “Brief Logo”.
+                        </p>
+                      </div>
+
+                      <div className="break-inside-avoid space-y-2">
+                        <p>
+                          <span className="font-bold text-slate-900">Điều khoản 3.</span> Sau 4 ngày làm việc (không tính thứ 7, Chủ nhật), ADOM sẽ đề xuất 3 phương án logo.
+                        </p>
+                        <div className="pl-4 sm:pl-6 space-y-2 border-l-2 border-slate-200 ml-1">
+                          <p className="break-inside-avoid">
+                            <span className="font-bold text-slate-900">A,</span> Quý khách chọn 1 phương án để phát triển tiếp; Quý khách có 3 lần chỉnh sửa, mỗi lần chỉnh sửa không quá 30% tổng thể (ví dụ màu sắc, kiểu chữ, bố cục,…)
+                          </p>
+                          <p className="break-inside-avoid">
+                            <span className="font-bold text-slate-900">B,</span> Nếu quý khách không đồng ý với cả 3 phương án: nếu do ADOM chưa bám sát yêu cầu ban đầu, chúng tôi sẽ tiếp tục đề xuất thêm phương án thứ 4 và không tính thêm phí; Trong trường hợp Quý khách vẫn không đồng ý với phương án tiếp theo ADOM đưa ra, chúng tôi có quyền đơn phương chấm dứt công việc và chi phí tạm ứng được chi trả cho số ngày làm việc vừa qua.
+                          </p>
+                          <p className="break-inside-avoid">
+                            <span className="font-bold text-slate-900">C,</span> Đối với trường hợp Quý khách muốn chỉnh sửa hơn 3 lần trên phương án đã chọn ADOM sẽ tính thêm phí từ lần thứ 4 trở đi (chúng tôi sẽ báo giá phù hợp với yêu cầu của Quý khách).
+                          </p>
+                          <p className="break-inside-avoid">
+                            <span className="font-bold text-slate-900">D,</span> Mỗi lần gửi duyệt, Quý khách vui lòng phản hồi trong tối đa 5 ngày; quá hạn coi như đã duyệt phương án.
+                          </p>
+                        </div>
                       </div>
 
                       <div className="break-inside-avoid">
-                        <h4 className="font-bold text-slate-700 mb-1 uppercase text-[11px]">3. BÀN GIAO & BẢN QUYỀN</h4>
-                        <p>- File thiết kế gốc (AI/PSD/Figma) được bàn giao sau khi khách hàng thanh toán đầy đủ.</p>
-                        <p>- Bản quyền thiết kế thuộc về khách hàng kể từ thời điểm hoàn tất thanh toán.</p>
+                        <p>
+                          <span className="font-bold text-slate-900">Điều khoản 4.</span> File gốc chỉ bàn giao khi đã thanh toán đủ 100%.
+                        </p>
                       </div>
 
                       <div className="break-inside-avoid">
-                        <h4 className="font-bold text-slate-700 mb-1 uppercase text-[11px]">4. HIỆU LỰC BÁO GIÁ</h4>
-                        <p>- Báo giá có hiệu lực trong vòng 15 ngày kể từ ngày phát hành.</p>
+                        <p>
+                          <span className="font-bold text-slate-900">Điều khoản 5.</span> Báo giá có hiệu lực 15 ngày kể từ ngày phát hành.
+                        </p>
+                      </div>
+
+                      <div className="break-inside-avoid">
+                        <p>
+                          <span className="font-bold text-slate-900">Điều khoản 6.</span> Trong trường hợp Quý khách đã tạm ứng, ADOM đã triển khai công việc mà Quý khách huỷ dự án thì chúng tôi không hoàn lại phí tạm ứng.
+                        </p>
+                      </div>
+
+                      <div className="break-inside-avoid">
+                        <p>
+                          <span className="font-bold text-slate-900">Điều khoản 7.</span> Trong trường hợp Quý khách đổi định hướng thiết kế so với Brief ban đầu ADOM sẽ tính là dự án mới và chúng tôi sẽ có báo giá mới.
+                        </p>
                       </div>
                     </div>
                   </div>
