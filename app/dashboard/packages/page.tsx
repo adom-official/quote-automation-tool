@@ -12,15 +12,15 @@ export default function PackagesPage() {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex justify-between items-end mb-6 shrink-0">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 mb-4 sm:mb-6 shrink-0">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">Quản lý Gói Báo Giá</h2>
-          <p className="text-slate-500 text-sm mt-1">Quản lý các gói dịch vụ được đóng gói sẵn để sử dụng trong báo giá.</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 leading-snug">Quản lý Gói Báo Giá</h2>
+          <p className="text-slate-500 text-xs sm:text-sm mt-1">Quản lý các gói dịch vụ được đóng gói sẵn để sử dụng trong báo giá.</p>
         </div>
-        <div>
+        <div className="w-full sm:w-auto">
           <Link 
             href="/dashboard/packages/new"
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-bold shadow-sm hover:bg-indigo-700 transition-colors"
+            className="flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm hover:bg-indigo-700 transition-colors"
           >
             <Plus className="w-4 h-4" />
             Tạo gói báo giá mới

@@ -123,42 +123,44 @@ export default function EditPackagePage() {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex justify-between items-end mb-6 shrink-0">
+      {/* Header Bar */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 mb-4 sm:mb-6 shrink-0">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <button onClick={() => router.push('/dashboard/packages')} className="text-slate-400 hover:text-slate-600 transition-colors">
+            <button onClick={() => router.push('/dashboard/packages')} className="text-slate-400 hover:text-slate-600 transition-colors shrink-0">
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h2 className="text-2xl font-bold text-slate-900">Chỉnh sửa Gói Báo Giá</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 leading-snug">Chỉnh sửa Gói Báo Giá</h2>
           </div>
-          <p className="text-slate-500 text-sm pl-7">Kéo thả hoặc nhấp chọn hạng mục từ thư viện để thêm/sửa gói báo giá.</p>
+          <p className="text-slate-500 text-xs sm:text-sm pl-7">Kéo thả hoặc nhấp chọn hạng mục từ thư viện để thêm/sửa gói báo giá.</p>
         </div>
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center w-full sm:w-auto justify-end shrink-0">
           <button 
             onClick={() => setShowDeleteModal(true)}
-            className="px-4 py-2 border border-red-200 text-red-600 rounded-xl text-sm font-medium hover:bg-red-50 transition-colors flex items-center gap-1.5 mr-2"
+            className="px-3 sm:px-4 py-2 border border-red-200 text-red-600 rounded-xl text-xs sm:text-sm font-medium hover:bg-red-50 transition-colors flex items-center gap-1.5 whitespace-nowrap"
           >
-            <Trash2 className="w-4 h-4" />
-            Xóa gói
+            <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <span>Xóa gói</span>
           </button>
-          <button onClick={() => router.push('/dashboard/packages')} className="px-4 py-2 border border-slate-200 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors">Hủy</button>
+          <button onClick={() => router.push('/dashboard/packages')} className="px-3 sm:px-4 py-2 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium hover:bg-slate-50 transition-colors whitespace-nowrap">Hủy</button>
           <button 
             onClick={handleSave} 
             disabled={isSaving}
-            className="px-5 py-2 bg-[#A6CE39] hover:bg-[#95ba33] text-slate-900 rounded-xl text-sm font-bold shadow-sm disabled:opacity-50 transition-colors"
+            className="px-4 sm:px-5 py-2 bg-[#A6CE39] hover:bg-[#95ba33] text-slate-900 rounded-xl text-xs sm:text-sm font-bold shadow-sm disabled:opacity-50 transition-colors whitespace-nowrap"
           >
             {isSaving ? 'Đang lưu...' : 'Lưu Thay Đổi'}
           </button>
         </div>
       </div>
 
-      <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 shrink-0 grid grid-cols-1 sm:grid-cols-3 gap-4">
+      {/* Package Meta Info Inputs */}
+      <div className="bg-white p-3 sm:p-4 rounded-2xl shadow-2xs border border-slate-200 mb-4 sm:mb-6 shrink-0 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
         <div>
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Tên Gói *</label>
-          <input type="text" value={packageName} onChange={e => setPackageName(e.target.value)} placeholder="VD: BR-SME-ADVANCED" className="w-full px-3 py-2 border border-slate-200 bg-slate-50/50 focus:bg-white rounded-xl focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none text-sm font-medium transition-all" />
+          <label className="block text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Tên Gói *</label>
+          <input type="text" value={packageName} onChange={e => setPackageName(e.target.value)} placeholder="VD: BR-SME-ADVANCED" className="w-full px-3 py-1.5 sm:py-2 border border-slate-200 bg-slate-50/50 focus:bg-white rounded-xl focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none text-xs sm:text-sm font-medium transition-all" />
         </div>
         <div>
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Ngân sách dự kiến</label>
+          <label className="block text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Ngân sách dự kiến</label>
           <input 
             type="text" 
             value={budget} 
@@ -167,25 +169,26 @@ export default function EditPackagePage() {
               setBudget(val ? Number(val).toLocaleString('en-US') : '');
             }} 
             placeholder="VD: Cao cấp" 
-            className="w-full px-3 py-2 border border-slate-200 bg-slate-50/50 focus:bg-white rounded-xl focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none text-sm font-medium transition-all" 
+            className="w-full px-3 py-1.5 sm:py-2 border border-slate-200 bg-slate-50/50 focus:bg-white rounded-xl focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none text-xs sm:text-sm font-medium transition-all" 
           />
         </div>
         <div>
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Quy mô doanh nghiệp</label>
-          <input type="text" value={scale} onChange={e => setScale(e.target.value)} placeholder="VD: SME" className="w-full px-3 py-2 border border-slate-200 bg-slate-50/50 focus:bg-white rounded-xl focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none text-sm font-medium transition-all" />
+          <label className="block text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Quy mô doanh nghiệp</label>
+          <input type="text" value={scale} onChange={e => setScale(e.target.value)} placeholder="VD: SME" className="w-full px-3 py-1.5 sm:py-2 border border-slate-200 bg-slate-50/50 focus:bg-white rounded-xl focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none text-xs sm:text-sm font-medium transition-all" />
         </div>
       </div>
       
-      <div className="flex flex-1 gap-6 overflow-hidden min-h-[400px]">
+      {/* Interactive Builder Area */}
+      <div className="flex flex-col lg:flex-row flex-1 gap-4 lg:gap-6 overflow-y-auto lg:overflow-hidden min-h-0">
         {/* Left Column: Thư viện Hạng mục thiết kế */}
-        <div className="w-1/3 flex flex-col border border-slate-200 rounded-2xl overflow-hidden shadow-2xs bg-white shrink-0">
-          <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-            <h3 className="font-bold text-xs uppercase tracking-wider text-slate-700">Thư viện hạng mục thiết kế</h3>
-            <span className="text-[11px] text-slate-400">Kéo hoặc nhấp + để thêm</span>
+        <div className="w-full lg:w-80 flex flex-col border border-slate-200 rounded-2xl overflow-hidden shadow-2xs bg-white shrink-0 max-h-64 lg:max-h-none">
+          <div className="p-3 sm:p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50 shrink-0">
+            <h3 className="font-bold text-xs uppercase tracking-wider text-slate-700">Thư viện hạng mục</h3>
+            <span className="text-[10px] sm:text-[11px] text-slate-400">Nhấp + để thêm</span>
           </div>
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+          <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-2.5">
             {items.length === 0 ? (
-              <p className="text-sm text-slate-500 text-center py-4">Chưa có hạng mục nào trong thư viện.</p>
+              <p className="text-xs sm:text-sm text-slate-500 text-center py-4">Chưa có hạng mục nào trong thư viện.</p>
             ) : (
               items.map(item => (
                 <div 
@@ -196,7 +199,7 @@ export default function EditPackagePage() {
                   className="p-3 border border-slate-200 rounded-xl hover:border-indigo-400 bg-white cursor-pointer transition-all group hover:shadow-2xs relative"
                 >
                   <div className="flex justify-between items-start mb-1">
-                    <p className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors pr-6">{item.name}</p>
+                    <p className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors pr-6">{item.name}</p>
                     <button 
                       type="button"
                       onClick={(e) => {
@@ -211,7 +214,7 @@ export default function EditPackagePage() {
                   </div>
                   <div className="flex justify-between items-center mt-2 text-xs font-medium">
                     <span className="font-mono font-bold text-slate-900">{new Intl.NumberFormat('en-US').format(item.price)}đ</span>
-                    <span className="text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md text-[11px] font-semibold">{item.estimatedTime ? `${item.estimatedTime} ngày` : '5 ngày'}</span>
+                    <span className="text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md text-[10px] sm:text-[11px] font-semibold">{item.estimatedTime ? `${item.estimatedTime} ngày` : '5 ngày'}</span>
                   </div>
                 </div>
               ))
@@ -221,45 +224,45 @@ export default function EditPackagePage() {
         
         {/* Right Column: Gói Hiện tại */}
         <div 
-          className="flex-1 flex flex-col border border-indigo-200 rounded-2xl bg-indigo-50/20 overflow-hidden shrink-0"
+          className="w-full lg:flex-1 flex flex-col border border-indigo-200 rounded-2xl bg-indigo-50/20 overflow-hidden shrink-0 min-h-[350px] lg:min-h-0"
           onDrop={handleDrop}
           onDragOver={handleDragOver}
         >
-          <div className="p-4 bg-white border-b border-indigo-100 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <h3 className="font-bold text-slate-900">Gói Hiện tại: {packageName || 'Chưa đặt tên'}</h3>
-              <span className="px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-md text-[10px] font-bold uppercase tracking-wider">Đang chỉnh sửa</span>
+          <div className="p-3 sm:p-4 bg-white border-b border-indigo-100 flex items-center justify-between shrink-0">
+            <div className="flex items-center gap-2 sm:gap-3 truncate pr-2">
+              <h3 className="font-bold text-xs sm:text-base text-slate-900 truncate">Gói Hiện tại: {packageName || 'Chưa đặt tên'}</h3>
+              <span className="hidden sm:inline-block px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-md text-[10px] font-bold uppercase tracking-wider shrink-0">Đang chỉnh sửa</span>
             </div>
-            <div className="flex gap-4 items-center text-xs">
-              <span className="text-slate-500 font-semibold">Đã chọn ({selectedItems.length})</span>
+            <div className="flex gap-2 items-center text-xs shrink-0">
+              <span className="text-slate-500 font-semibold text-xs">Đã chọn ({selectedItems.length})</span>
             </div>
           </div>
           
-          <div className="flex-1 p-6 space-y-3 overflow-y-auto">
+          <div className="flex-1 p-3 sm:p-6 space-y-3 overflow-y-auto">
             {selectedItems.map((item) => (
-              <div key={item._id} className="bg-white p-4 rounded-xl shadow-2xs border border-indigo-100 flex items-center justify-between relative group hover:border-indigo-300 transition-all">
+              <div key={item._id} className="bg-white p-3 sm:p-4 rounded-xl shadow-2xs border border-indigo-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative group hover:border-indigo-300 transition-all">
                 <button 
                   onClick={() => removeItem(item._id)}
-                  className="absolute -top-2 -right-2 w-6 h-6 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-bold text-xs opacity-80 hover:opacity-100 hover:scale-110 transition-all"
+                  className="absolute -top-2 -right-2 w-6 h-6 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-bold text-xs opacity-80 hover:opacity-100 hover:scale-110 transition-all z-10"
                   title="Xóa hạng mục"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
                 <div className="flex-1 pr-4">
-                  <p className="text-sm font-bold text-slate-900">{item.name}</p>
+                  <p className="text-xs sm:text-sm font-bold text-slate-900">{item.name}</p>
                 </div>
-                <div className="flex items-center gap-6">
-                  <div className="w-32">
-                    <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400 block mb-1">Giá (VNĐ)</label>
+                <div className="flex items-center gap-3 sm:gap-6 justify-between sm:justify-end">
+                  <div className="w-28 sm:w-32">
+                    <label className="text-[9px] sm:text-[10px] uppercase tracking-wider font-bold text-slate-400 block mb-0.5 sm:mb-1">Giá (VNĐ)</label>
                     <input 
                       type="text" 
                       value={new Intl.NumberFormat('en-US').format(item.price)} 
                       onChange={(e) => handlePriceChange(item._id, e.target.value)}
-                      className="w-full border border-slate-200 rounded-lg px-2 py-1 text-sm font-mono font-bold text-slate-900 focus:ring-1 focus:ring-indigo-500 outline-none bg-slate-50/50" 
+                      className="w-full border border-slate-200 rounded-lg px-2 py-1 text-xs sm:text-sm font-mono font-bold text-slate-900 focus:ring-1 focus:ring-indigo-500 outline-none bg-slate-50/50" 
                     />
                   </div>
-                  <div className="w-28 text-right">
-                    <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400 block mb-1">Thời gian (ngày)</label>
+                  <div className="w-20 sm:w-28 text-right">
+                    <label className="text-[9px] sm:text-[10px] uppercase tracking-wider font-bold text-slate-400 block mb-0.5 sm:mb-1">Thời gian</label>
                     <input 
                       type="number"
                       min="1" 
@@ -272,20 +275,20 @@ export default function EditPackagePage() {
               </div>
             ))}
             
-            <div className="border-2 border-dashed border-indigo-200 rounded-xl h-24 flex items-center justify-center text-indigo-500 text-xs font-bold bg-white/50 select-none">
-              + Kéo thả hoặc nhấp hạng mục từ thư viện bên trái để thêm vào gói này
+            <div className="border-2 border-dashed border-indigo-200 rounded-xl h-20 sm:h-24 flex items-center justify-center text-indigo-500 text-xs font-bold bg-white/50 select-none p-3 text-center">
+              + Nhấp hoặc kéo thả hạng mục từ thư viện để thêm vào gói
             </div>
           </div>
           
-          <div className="p-5 bg-white border-t border-slate-200 flex items-center justify-between shrink-0">
-            <div className="flex gap-8">
+          <div className="p-3 sm:p-5 bg-white border-t border-slate-200 flex items-center justify-between shrink-0">
+            <div className="flex gap-4 sm:gap-8">
               <div className="space-y-0.5">
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Tổng thời gian</p>
-                <p className="text-lg font-bold font-mono text-indigo-600">{totalDays} <span className="text-xs text-slate-500 font-normal">ngày làm việc</span></p>
+                <p className="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-wider">Tổng thời gian</p>
+                <p className="text-sm sm:text-lg font-bold font-mono text-indigo-600">{totalDays} <span className="text-xs text-slate-500 font-normal">ngày</span></p>
               </div>
               <div className="space-y-0.5">
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Tổng ngân sách (Chưa VAT)</p>
-                <p className="text-xl font-bold font-mono text-slate-900">{new Intl.NumberFormat('en-US').format(totalPrice)} <span className="text-xs text-slate-500 font-normal">VNĐ</span></p>
+                <p className="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-wider">Tổng ngân sách</p>
+                <p className="text-base sm:text-xl font-bold font-mono text-slate-900">{new Intl.NumberFormat('en-US').format(totalPrice)} <span className="text-xs text-slate-500 font-normal">VNĐ</span></p>
               </div>
             </div>
           </div>
