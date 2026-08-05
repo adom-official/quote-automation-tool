@@ -89,6 +89,10 @@ export default function QuoteDetailPage() {
             break-inside: avoid !important;
             page-break-inside: avoid !important;
           }
+          .break-before-page {
+            break-before: page !important;
+            page-break-before: always !important;
+          }
           .print\:hidden {
             display: none !important;
           }
@@ -274,7 +278,10 @@ export default function QuoteDetailPage() {
                   </div>
 
                   {/* ĐIỀU KHOẢN THƯƠNG MẠI GÓI THIẾT KẾ LOGO STANDARD */}
-                  <div className="border-t border-slate-100 pt-6 mt-4">
+                  <div 
+                    className="border-t border-slate-100 pt-8 mt-12 print:border-t-0 print:pt-[12mm] print:mt-0 break-before-page"
+                    style={{ breakBefore: 'page', pageBreakBefore: 'always' }}
+                  >
                     <h2 className="text-xs sm:text-sm font-bold text-[#0B1527] uppercase tracking-wider mb-4 break-inside-avoid">
                       ĐIỀU KHOẢN THƯƠNG MẠI GÓI THIẾT KẾ LOGO STANDARD
                     </h2>
@@ -301,7 +308,7 @@ export default function QuoteDetailPage() {
                             <span className="font-bold text-slate-900">A,</span> Quý khách chọn 1 phương án để phát triển tiếp; Quý khách có 3 lần chỉnh sửa, mỗi lần chỉnh sửa không quá 30% tổng thể (ví dụ màu sắc, kiểu chữ, bố cục,…)
                           </p>
                           <p className="break-inside-avoid">
-                            <span className="font-bold text-slate-900">B,</span> Nếu quý khách không đồng ý với cả 3 phương án: nếu do ADOM chưa bám sát yêu cầu ban đầu, chúng tôi sẽ tiếp tục đề xuất thêm phương án thứ 4 và không tính thêm phí; Trong trường hợp Quý khách vẫn không đồng ý với phương án tiếp theo ADOM đưa ra, chúng tôi có quyền đơn phương chấm dứt công việc và chi phí tạm ứng được chi trả cho số ngày làm việc vừa qua.
+                            <span className="font-bold text-slate-900">B,</span> Nếu Quý khách không đồng ý với cả 3 phương án: nếu do ADOM chưa bám sát yêu cầu ban đầu, chúng tôi sẽ tiếp tục đề xuất thêm phương án thứ 4 và không tính thêm phí; Trong trường hợp Quý khách vẫn không đồng ý với phương án tiếp theo ADOM đưa ra, chúng tôi có quyền đơn phương chấm dứt công việc và chi phí tạm ứng được chi trả cho số ngày làm việc vừa qua.
                           </p>
                           <p className="break-inside-avoid">
                             <span className="font-bold text-slate-900">C,</span> Đối với trường hợp Quý khách muốn chỉnh sửa hơn 3 lần trên phương án đã chọn ADOM sẽ tính thêm phí từ lần thứ 4 trở đi (chúng tôi sẽ báo giá phù hợp với yêu cầu của Quý khách).
